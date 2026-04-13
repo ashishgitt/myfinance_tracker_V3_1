@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "410360755841-1ttes4e5uoa7u431n9e84o7viagrt1li.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.myfinance.tracker",
+            "certificate_hash": "bd5398ba47319bdafc9a7bd11bd2a16cd6dee9a7"
+          }
+        },
+        {
           "client_id": "410360755841-de7uhd83ntmk7p5cfjkh7qovvfap1b1v.apps.googleusercontent.com",
           "client_type": 3
         }

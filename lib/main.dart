@@ -28,7 +28,7 @@ Future<void> main() async {
   try {
     final options = DefaultFirebaseOptions.currentPlatform;
     // Only initialize if apiKey is not a placeholder
-    if (!options.apiKey.startsWith('REPLACE_WITH')) {
+    if (!options.apiKey.startsWith('AIzaSyChXen9wdpc86BY59TPIpvFIygcMRoBxsg')) {
       await Firebase.initializeApp(options: options);
       debugPrint('✅ Firebase initialized successfully');
     } else {
