@@ -5,11 +5,12 @@ import 'package:timezone/timezone.dart' as tz;
 class NotificationService {
   static final _plugin = FlutterLocalNotificationsPlugin();
 
-  static const _channelId = 'myfinance_main_channel';
+  static const _channelId   = 'myfinance_main_channel';
   static const _channelName = 'MyFinance Notifications';
 
-  static const _dailyReminderId = 1;
-  static const _budgetAlertId = 2;
+  static const _dailyReminderId  = 1;
+  static const _budgetAlertId    = 2;
+  static const _exportReminderId = 3;
 
   static const AndroidNotificationDetails _androidDetails =
       AndroidNotificationDetails(
@@ -24,7 +25,7 @@ class NotificationService {
   static const NotificationDetails _details =
       NotificationDetails(android: _androidDetails);
 
-  // ─── Init (called from main.dart) ────────────────────────────
+  // ─── Init ─────────────────────────────────────────────────────
   static Future<void> init() async {
     try {
       const android = AndroidInitializationSettings('@mipmap/ic_launcher');
@@ -47,8 +48,7 @@ class NotificationService {
   }
 
   // ─── Daily Reminder ───────────────────────────────────────────
-  static Future<void> scheduleDailyReminder(
-      int hour, int minute) async {
+  static Future<void> scheduleDailyReminder(int hour, int minute) async {
     try {
       await _plugin.cancel(_dailyReminderId);
       final scheduledDate = _nextInstanceOfTime(hour, minute);
@@ -58,8 +58,10 @@ class NotificationService {
         "Don't forget to log your transactions today!",
         scheduledDate,
         _details,
-        androidScheduleMode:
-            AndroidScheduleMode.inexactAllowWhileIdle,
+        // FIX: required parameter added for flutter_local_notifications v17+
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
         matchDateTimeComponents: DateTimeComponents.time,
       );
     } catch (e) {
@@ -71,7 +73,7 @@ class NotificationService {
     await _plugin.cancel(_dailyReminderId);
   }
 
-  // ─── Budget Alert ─────────────────────────────────────────────
+  // ─── Budget Alert (immediate, no schedule) ───────────────────
   static Future<void> showBudgetAlert(
       String categoryName, double budget, double spent) async {
     try {
@@ -87,21 +89,7 @@ class NotificationService {
     }
   }
 
-  // ─── Helper ───────────────────────────────────────────────────
-  static tz.TZDateTime _nextInstanceOfTime(int hour, int minute) {
-    final now = tz.TZDateTime.now(tz.local);
-    var scheduled =
-        tz.TZDateTime(tz.local, now.year, now.month, now.day, hour, minute);
-    if (scheduled.isBefore(now)) {
-      scheduled = scheduled.add(const Duration(days: 1));
-    }
-    return scheduled;
-  }
-  // closing brace moved to end
-
   // ─── Scheduled Export Reminder ────────────────────────────────
-  static const _exportReminderId = 3;
-
   static Future<void> scheduleExportReminder(
       int hour, int minute, String frequency) async {
     try {
@@ -126,6 +114,9 @@ class NotificationService {
         'Tap to generate and share your scheduled report.',
         scheduledDate,
         _details,
+        // FIX: required parameter added for flutter_local_notifications v17+
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
         androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
         matchDateTimeComponents: repeat,
       );
@@ -138,4 +129,14 @@ class NotificationService {
     await _plugin.cancel(_exportReminderId);
   }
 
+  // ─── Helper ───────────────────────────────────────────────────
+  static tz.TZDateTime _nextInstanceOfTime(int hour, int minute) {
+    final now = tz.TZDateTime.now(tz.local);
+    var scheduled =
+        tz.TZDateTime(tz.local, now.year, now.month, now.day, hour, minute);
+    if (scheduled.isBefore(now)) {
+      scheduled = scheduled.add(const Duration(days: 1));
+    }
+    return scheduled;
+  }
 }
