@@ -38,11 +38,11 @@ class DefaultFirebaseOptions {
 
     // Firebase Console → Project Settings → General → Web API key
     // (also called "Browser key" in the API credentials section)
-    apiKey: 'REPLACE_WITH_API_KEY_FROM_FIREBASE_CONSOLE',
+    apiKey: 'AIzaSyChXen9wdpc86BY59TPIpvFIygcMRoBxsg',
 
     // Firebase Console → Project Settings → Your apps → App ID
     // Format: 1:410360755841:android:xxxxxxxxxxxxxxxx
-    appId: 'REPLACE_WITH_APP_ID_FROM_FIREBASE_CONSOLE',
+    appId: '1:410360755841:android:7f0178c590a1ca898b3f80',
 
     // Firebase Console → Project Settings → General → Project number
     messagingSenderId: '410360755841',
@@ -59,8 +59,8 @@ class DefaultFirebaseOptions {
   // ── Web Config (not needed for Android-only app) ──────────────
   static const FirebaseOptions web = FirebaseOptions(
     projectId: 'myfinancetracker-3ada0',
-    apiKey: 'REPLACE_WITH_API_KEY_FROM_FIREBASE_CONSOLE',
-    appId: 'REPLACE_WITH_APP_ID_FROM_FIREBASE_CONSOLE',
+    apiKey: 'AIzaSyChXen9wdpc86BY59TPIpvFIygcMRoBxsg',
+    appId: '1:410360755841:android:7f0178c590a1ca898b3f80',
     messagingSenderId: '410360755841',
     storageBucket: 'myfinancetracker-3ada0.firebasestorage.app',
     authDomain: 'myfinancetracker-3ada0.firebaseapp.com',
