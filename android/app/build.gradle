@@ -1,0 +1,73 @@
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader('UTF-8') { reader -> localProperties.load(reader) }
+}
+
+def flutterRoot = localProperties.getProperty('flutter.sdk')
+if (flutterRoot == null) {
+    throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in local.properties.")
+}
+
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode') ?: '1'
+def flutterVersionName = localProperties.getProperty('flutter.versionName') ?: '1.0'
+
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+
+// Apply google-services only when google-services.json has real values
+def googleServicesFile = file('google-services.json')
+def hasRealGoogleServices = false
+if (googleServicesFile.exists()) {
+    def content = googleServicesFile.text
+    hasRealGoogleServices = !content.contains('REPLACE_WITH_VALUE_FROM_FIREBASE_CONSOLE') &&
+                            !content.contains('REPLACE_WITH_WEB_CLIENT_ID') &&
+                            !content.contains('REPLACE_WITH_API_KEY')
+}
+if (hasRealGoogleServices) {
+    apply plugin: 'com.google.gms.google-services'
+    println "✅ google-services.json detected — Firebase enabled"
+} else {
+    println "⚠️  google-services.json has placeholder values — Firebase disabled for this build"
+    println "    → Replace placeholders with real values from Firebase Console to enable"
+}
+
+android {
+    namespace "com.myfinance.tracker"
+    compileSdkVersion 35
+    ndkVersion "25.1.8937393"
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+        coreLibraryDesugaringEnabled true
+    }
+    kotlinOptions { jvmTarget = '17' }
+    sourceSets { main.java.srcDirs += 'src/main/kotlin' }
+
+    defaultConfig {
+        applicationId "com.myfinance.tracker"
+        minSdkVersion 21
+        targetSdkVersion 35
+        versionCode flutterVersionCode.toInteger()
+        versionName flutterVersionName
+        multiDexEnabled true
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.debug
+            minifyEnabled false
+            shrinkResources false
+        }
+    }
+}
+
+flutter { source '../..' }
+
+dependencies {
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.multidex:multidex:2.0.1'
+}

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "410360755841",
+    "project_id": "myfinancetracker-3ada0",
+    "storage_bucket": "myfinancetracker-3ada0.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:410360755841:android:7f0178c590a1ca898b3f80",
+        "android_client_info": {
+          "package_name": "com.myfinance.tracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "410360755841-de7uhd83ntmk7p5cfjkh7qovvfap1b1v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChXen9wdpc86BY59TPIpvFIygcMRoBxsg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "410360755841-de7uhd83ntmk7p5cfjkh7qovvfap1b1v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

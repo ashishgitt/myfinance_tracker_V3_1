@@ -1,0 +1,74 @@
+name: Build Flutter APK
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      # ══════════════════════════════════════════════════════════════
+      # SHA-1 FINGERPRINT EXTRACTION
+      # This step prints your debug keystore SHA-1 fingerprint.
+      # Copy this SHA1 value and add it to Firebase Console:
+      #   Firebase Console → Project Settings (⚙️)
+      #     → Your apps → Android app (com.myfinance.tracker)
+      #     → Add fingerprint → paste SHA1 → Save
+      # ══════════════════════════════════════════════════════════════
+      - name: 🔑 Print SHA-1 Fingerprint for Firebase
+        run: |
+          echo ""
+          echo "╔══════════════════════════════════════════════════════════╗"
+          echo "║         YOUR SHA-1 FINGERPRINT FOR FIREBASE             ║"
+          echo "╠══════════════════════════════════════════════════════════╣"
+          keytool -list -v \
+            -alias androiddebugkey \
+            -keystore ~/.android/debug.keystore \
+            -storepass android \
+            -keypass android 2>/dev/null \
+            | grep -E "^(SHA1|SHA256):" \
+            | sed 's/^/║  /'
+          echo "╠══════════════════════════════════════════════════════════╣"
+          echo "║  HOW TO USE:                                            ║"
+          echo "║  1. Copy the SHA1 value above                          ║"
+          echo "║  2. Firebase Console → Project Settings (⚙️)            ║"
+          echo "║  3. Your apps → Android → Add fingerprint              ║"
+          echo "║  4. Paste SHA1 → Save                                  ║"
+          echo "║  5. Re-download google-services.json and update it     ║"
+          echo "╚══════════════════════════════════════════════════════════╝"
+          echo ""
+
+      - name: Setup Flutter 3.27.4
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.27.4'
+          channel: 'stable'
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Analyze (non-fatal)
+        run: flutter analyze --no-fatal-infos || true
+
+      - name: Build release APK
+        run: flutter build apk --release --no-shrink
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: myfinance-tracker-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 30
